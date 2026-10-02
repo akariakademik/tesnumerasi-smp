@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Numerasi - Akari Bimbel</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --border-color: #d1d5db;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px 15px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header-card {
+            background-color: var(--card-bg);
+            border-top: 8px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header-card h1 {
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .header-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .student-info {
+            background-color: #eff6ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            transition: border 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .question-card:focus-within {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .question-text {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .topic-badge {
+            display: inline-block;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .option-label:hover {
+            background-color: #f8fafc;
+        }
+
+        .option-input {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Highlight saat opsi dipilih */
+        .option-input:checked + .option-text {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .option-label:has(input:checked) {
+            border-color: var(--primary-color);
+            background-color: #eff6ff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-submit:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .result-card {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .result-card h2 { color: var(--success-color); margin-bottom: 10px;}
+        .result-card p { margin-bottom: 20px; color: var(--text-muted);}
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quizContainer">
+        <div class="header-card">
+            <h1>Ujian Numerasi Adaptif</h1>
+            <p>Jawablah 21 soal di bawah ini dengan teliti. Soal disusun khusus untuk mengukur kemampuan dasar matematikamu.</p>
+            <div class="student-info" id="studentInfo">
+                Memuat data siswa...
+            </div>
+        </div>
+
+        <form id="formKuis">
+            <div id="questionsWrapper">
+                <!-- Pertanyaan akan di-generate oleh JavaScript di sini -->
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit">Kirim Jawaban</button>
+        </form>
+    </div>
+
+    <!-- Halaman Sukses -->
+    <div class="container result-card" id="resultContainer">
+        <div class="header-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 15px auto; display: block;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h2>Selamat, Kuis Selesai!</h2>
+            <p>Hasil pengerjaan kamu sudah direkap dan berhasil dikirim ke sistem Akari Bimbel.</p>
+            <button class="btn-submit" onclick="window.location.href='index.html'" style="max-width: 250px; margin: 0 auto; display: block;">Kembali ke Awal</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <h3 style="color: var(--primary-color);">Menyimpan Hasil Tes...</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 10px;">Mohon jangan tutup halaman ini.</p>
+    </div>
+
+    <script>
+        // URL APPS SCRIPT (SAMA DENGAN HALAMAN 1)
+        const scriptURL = 'URL_WEB_APP_APPS_SCRIPT_KAMU_DISINI'; 
+
+        // Mengambil data nama dan kelas dari localStorage (disimpan dari halaman 1)
+        const studentName = localStorage.getItem('akari_nama') || 'Siswa Tanpa Nama';
+        const studentClass = localStorage.getItem('akari_kelas') || 'Kelas Tidak Diketahui';
+        
+        document.getElementById('studentInfo').innerText = `Peserta: ${studentName} - ${studentClass}`;
+
+        const bankSoal = [
+            // Topik 1: Mengenal Bilangan
+            { id: 'T1_1', topic: 'Mengenal Bilangan', q: 'Angka 5 pada bilangan 4.567 menempati nilai tempat...', options: ['Ribuan', 'Ratusan', 'Puluhan', 'Satuan'], ans: 1 },
+            { id: 'T1_2', topic: 'Mengenal Bilangan', q: 'Urutan bilangan dari yang paling kecil ke paling besar adalah...', options: ['234, 432, 342', '234, 342, 432', '432, 342, 234', '342, 234, 432'], ans: 1 },
+            { id: 'T1_3', topic: 'Mengenal Bilangan', q: 'Tanda yang tepat untuk melengkapi 4.500 ... 4.050 adalah?', options: ['< (Lebih kecil)', '> (Lebih besar)', '= (Sama dengan)', '+ (Tambah)'], ans: 1 },
+            { id: 'T1_4', topic: 'Mengenal Bilangan', q: 'Manakah dari bilangan berikut yang merupakan bilangan ganjil?', options: ['1.246', '3.508', '4.781', '6.990'], ans: 2 },
+            { id: 'T1_5', topic: 'Mengenal Bilangan', q: 'Bilangan 6.789 jika dibulatkan ke ribuan terdekat menjadi...', options: ['6.000', '6.500', '7.000', '7.500'], ans: 2 },
+
+            // Topik 2: Operasi Hitung Dasar
+            { id: 'T2_1', topic: 'Operasi Hitung Dasar', q: 'Hasil dari 125 + 234 adalah...', options: ['359', '349', '459', '369'], ans: 0 },
+            { id: 'T2_2', topic: 'Operasi Hitung Dasar', q: 'Berapakah hasil dari 500 - 145?', options: ['345', '355', '455', '255'], ans: 1 },
+            { id: 'T2_3', topic: 'Operasi Hitung Dasar', q: 'Sebuah kotak berisi 12 pensil. Jika ada 5 kotak, berapa jumlah semua pensil?', options: ['50', '60', '70', '80'], ans: 1 },
+            { id: 'T2_4', topic: 'Operasi Hitung Dasar', q: 'Ibu memiliki 48 permen dan dibagikan kepada 6 anak sama rata. Tiap anak mendapat...', options: ['6 permen', '7 permen', '8 permen', '9 permen'], ans: 2 },
+            { id: 'T2_5', topic: 'Operasi Hitung Dasar', q: 'Hasil dari operasi 10 + 5 x 2 adalah... (Ingat perkalian dikerjakan lebih dulu)', options: ['30', '20', '15', '25'], ans: 1 },
+
+            // Topik 3: Pecahan
+            { id: 'T3_1', topic: 'Pecahan', q: 'Pecahan yang senilai dengan 1/2 adalah...', options: ['1/4', '2/4', '3/4', '2/3'], ans: 1 },
+            { id: 'T3_2', topic: 'Pecahan', q: 'Hasil dari 1/4 + 2/4 adalah...', options: ['3/4', '3/8', '1/2', '4/4'], ans: 0 },
+            { id: 'T3_3', topic: 'Pecahan', q: 'Andi memiliki kue 1 bagian utuh, lalu dimakan 1/3 bagian. Sisa kue Andi adalah...', options: ['1/3', '2/3', '1/2', '3/3'], ans: 1 },
+            { id: 'T3_4', topic: 'Pecahan', q: 'Manakah pecahan di bawah ini yang nilainya paling besar?', options: ['1/2', '1/3', '1/4', '1/5'], ans: 0 },
+            { id: 'T3_5', topic: 'Pecahan', q: 'Hasil dari 1/2 x 1/2 adalah...', options: ['1/4', '2/4', '1/1', '2/2'], ans: 0 },
+
+            // Topik 4: Desimal dan Persentase
+            { id: 'T4_1', topic: 'Desimal dan Persentase', q: 'Pecahan 1/2 jika diubah ke bentuk desimal menjadi...', options: ['0.1', '0.2', '0.5', '1.2'], ans: 2 },
+            { id: 'T4_2', topic: 'Desimal dan Persentase', q: 'Hasil dari 0.5 + 0.3 adalah...', options: ['0.2', '0.8', '0.15', '5.3'], ans: 1 },
+            { id: 'T4_3', topic: 'Desimal dan Persentase', q: 'Bentuk persen dari 3/4 adalah...', options: ['34%', '50%', '75%', '100%'], ans: 2 },
+            { id: 'T4_4', topic: 'Desimal dan Persentase', q: 'Sebuah mainan seharga Rp10.000 diskon 10%. Berapa potongan harganya?', options: ['Rp100', 'Rp500', 'Rp1.000', 'Rp9.000'], ans: 2 },
+            { id: 'T4_5', topic: 'Desimal dan Persentase', q: 'Bentuk pecahan biasa dari 0.25 adalah...', options: ['1/4', '1/2', '2/5', '1/5'], ans: 0 },
+
+            // Topik 5: Pengukuran
+            { id: 'T5_1', topic: 'Pengukuran', q: 'Jarak rumah ke sekolah adalah 2 km. Berapa meter jarak tersebut?', options: ['20 meter', '200 meter', '2.000 meter', '20.000 meter'], ans: 2 },
+            { id: 'T5_2', topic: 'Pengukuran', q: 'Budi belajar selama 1 jam 30 menit. Berapa menit Budi belajar?', options: ['60 menit', '90 menit', '130 menit', '150 menit'], ans: 1 },
+            { id: 'T5_3', topic: 'Pengukuran', q: 'Ibu membeli 5 kg beras. Berat beras ibu sama dengan...', options: ['50 gram', '500 gram', '5.000 gram', '50.000 gram'], ans: 2 },
+            { id: 'T5_4', topic: 'Pengukuran', q: 'Andi mulai ujian pukul 07:30 dan selesai dalam waktu 45 menit. Pukul berapa ujian selesai?', options: ['08:00', '08:15', '08:30', '08:45'], ans: 1 },
+            { id: 'T5_5', topic: 'Pengukuran', q: 'Sebuah botol berisi 2 liter air. Volume air tersebut sama dengan...', options: ['20 ml', '200 ml', '2.000 ml', '20.000 ml'], ans: 2 },
+
+            // Topik 6: Geometri Dasar
+            { id: 'T6_1', topic: 'Geometri Dasar', q: 'Bangun datar yang memiliki 4 sisi sama panjang dan 4 sudut siku-siku adalah...', options: ['Persegi Panjang', 'Jajar Genjang', 'Persegi', 'Layang-layang'], ans: 2 },
+            { id: 'T6_2', topic: 'Geometri Dasar', q: 'Sebuah persegi panjang memiliki panjang 5 cm dan lebar 4 cm. Berapa luasnya?', options: ['9 cm²', '18 cm²', '20 cm²', '25 cm²'], ans: 2 },
+            { id: 'T6_3', topic: 'Geometri Dasar', q: 'Keliling persegi dengan panjang sisi 6 cm adalah...', options: ['12 cm', '18 cm', '24 cm', '36 cm'], ans: 2 },
+            { id: 'T6_4', topic: 'Geometri Dasar', q: 'Sebuah kubus memiliki rusuk sepanjang 3 cm. Volume kubus tersebut adalah...', options: ['9 cm³', '18 cm³', '27 cm³', '81 cm³'], ans: 2 },
+            { id: 'T6_5', topic: 'Geometri Dasar', q: 'Benda di bawah ini yang menyerupai bentuk bangun ruang tabung adalah...', options: ['Bola basket', 'Kaleng susu', 'Kotak sepatu', 'Topi ulang tahun'], ans: 1 },
+
+            // Topik 7: Pengolahan Data
+            { id: 'T7_1', topic: 'Pengolahan Data', q: 'Dalam kelas ada 15 anak suka apel, 10 suka jeruk, 5 suka mangga. Buah apa yang paling banyak disukai?', options: ['Jeruk', 'Mangga', 'Apel', 'Semua sama'], ans: 2 },
+            { id: 'T7_2', topic: 'Pengolahan Data', q: 'Berdasarkan data soal sebelumnya, berapakah jumlah seluruh anak di kelas tersebut?', options: ['25', '30', '35', '40'], ans: 1 },
+            { id: 'T7_3', topic: 'Pengolahan Data', q: 'Pada piktogram, 1 gambar bintang mewakili 5 siswa. Jika ada 4 bintang, berapa jumlah siswanya?', options: ['4 siswa', '9 siswa', '15 siswa', '20 siswa'], ans: 3 },
+            { id: 'T7_4', topic: 'Pengolahan Data', q: 'Senin terjual 10 buku, Selasa 15 buku, Rabu 25 buku. Berapa selisih penjualan hari Rabu dan Senin?', options: ['5 buku', '10 buku', '15 buku', '35 buku'], ans: 2 },
+            { id: 'T7_5', topic: 'Pengolahan Data', q: 'Nilai ujian Budi: 80, 90, 70. Berapakah rata-rata nilai Budi?', options: ['70', '80', '90', '100'], ans: 1 }
+        ];
+
+        // Fungsi untuk mengacak array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        let selectedQuestions = [];
+
+        // Mengambil 3 soal acak DARI SETIAP topik
+        const topics = [...new Set(bankSoal.map(item => item.topic))];
+        topics.forEach(topic => {
+            let soalTopikIni = bankSoal.filter(item => item.topic === topic);
+            shuffleArray(soalTopikIni);
+            selectedQuestions.push(...soalTopikIni.slice(0, 3)); // Ambil tepat 3 soal
+        });
+
+        // Setelah dikumpulkan (total 21 soal), acak urutannya agar topik tidak berurutan
+        shuffleArray(selectedQuestions);
+
+        const questionsWrapper = document.getElementById('questionsWrapper');
+        
+        selectedQuestions.forEach((q, index) => {
+            const no = index + 1;
+            
+            // Generate HTML untuk Opsi Jawaban (A, B, C, D)
+            let optionsHTML = '';
+            q.options.forEach((opt, i) => {
+                const optId = `q${index}_opt${i}`;
+                optionsHTML += `
+                    <label class="option-label" for="${optId}">
+                        <input type="radio" class="option-input" name="question_${index}" id="${optId}" value="${i}" required>
+                        <span class="option-text">${String.fromCharCode(65 + i)}. ${opt}</span>
+                    </label>
+                `;
+            });
+
+            // Bungkus dalam Card Pertanyaan
+            const questionHTML = `
+                <div class="question-card" id="card_q${index}">
+                    <div class="topic-badge">${q.topic}</div>
+                    <div class="question-text">${no}. ${q.q}</div>
+                    <div class="options-container">
+                        ${optionsHTML}
+                    </div>
+                </div>
+            `;
+            
+            questionsWrapper.insertAdjacentHTML('beforeend', questionHTML);
+        });
+
+        document.getElementById('formKuis').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Munculkan loading screen
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('btnSubmit').disabled = true;
+
+            // 1. Evaluasi Jawaban
+            let totalCorrect = 0;
+            let topicStats = {};
+            
+            // Inisialisasi statistik topik
+            topics.forEach(t => {
+                topicStats[t] = { correct: 0, total: 3 }; 
+            });
+
+            // Periksa tiap jawaban
+            selectedQuestions.forEach((q, index) => {
+                // Ambil jawaban yang dipilih user (berupa indeks 0,1,2,3)
+                const selectedOption = document.querySelector(`input[name="question_${index}"]:checked`);
+                
+                if (selectedOption) {
+                    const userAnswer = parseInt(selectedOption.value);
+                    if (userAnswer === q.ans) {
+                        totalCorrect++;
+                        topicStats[q.topic].correct++;
+                    }
+                }
+            });
+
+            // 2. Kalkulasi Skor dan Tingkat Skill
+            // Skor skala 100
+            const finalScore = Math.round((totalCorrect / 21) * 100); 
+            
+            let tingkatSkill = "Pemula";
+            if (finalScore >= 80) tingkatSkill = "Mahir";
+            else if (finalScore >= 50) tingkatSkill = "Menengah";
+
+            // 3. Susun Detail Rekapan (Format teks untuk masuk ke Excel/Sheet)
+            let detailArr = [];
+            for (const [topic, stat] of Object.entries(topicStats)) {
+                detailArr.push(`${topic}: ${stat.correct}/${stat.total}`);
+            }
+            const detailText = detailArr.join(' | ');
+
+            // 4. Kirim Data ke Google Apps Script
+            const payload = {
+                action: 'simpanHasilTes',
+                data: {
+                    timestamp: new Date().toLocaleString('id-ID'),
+                    nama: studentName,
+                    kelas: studentClass,
+                    skor: finalScore,
+                    tingkat_skill: tingkatSkill,
+                    detail: detailText
+                }
+            };
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                if (data.status === 'success') {
+                    // Sembunyikan Kuis, Tampilkan Pesan Sukses
+                    document.getElementById('quizContainer').style.display = 'none';
+                    document.getElementById('resultContainer').style.display = 'block';
+                    
+                    // Bersihkan memori nama di browser
+                    localStorage.removeItem('akari_nama');
+                    localStorage.removeItem('akari_kelas');
+                } else {
+                    throw new Error("Respon Apps Script Gagal");
+                }
+            })
+            .catch(error => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                alert('Gagal mengirim data. Pastikan internet stabil dan coba klik Kirim Jawaban lagi.');
+                document.getElementById('btnSubmit').disabled = false;
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>
