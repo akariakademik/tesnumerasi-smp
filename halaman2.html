@@ -288,7 +288,7 @@
             <p style="margin-bottom: 20px; color: var(--text-muted);">Selamat datang, <strong id="prepStudentName">Siswa</strong>. Silakan baca peraturan sebelum memulai.</p>
             
             <ul class="rules-list">
-                <li>✅ Kuis ini terdiri dari <strong>30 Soal Adaptif</strong> (Pilihan Ganda).</li>
+                <li>✅ Kuis ini terdiri dari <strong>30 Soal Numerasi</strong> (Pilihan Ganda).</li>
                 <li>✅ Waktu pengerjaan adalah <strong>70 Menit</strong> tanpa jeda.</li>
                 <li>✅ Siapkan kertas buram dan alat tulis untuk berhitung.</li>
                 <li>✅ <strong>TIDAK ADA PENGURANGAN NILAI</strong> jika jawaban salah. Kosongkan jika tidak tahu, namun disarankan untuk dijawab semua.</li>
@@ -368,7 +368,7 @@
     </div>
 
     <script>
-        const scriptURL = 'URL_WEB_APP_APPS_SCRIPT_KAMU_DISINI'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyrBvkJXNqy1LVa6KvOtnCJhPUuZmrnyc4akWOAfJtdq_BDNvyS7R7sMKYCVzFym--b/exec'; 
 
         const studentName = localStorage.getItem('akari_nama') || 'Siswa Tanpa Nama';
         const studentClass = localStorage.getItem('akari_kelas') || 'Kelas Tidak Diketahui';
@@ -659,7 +659,15 @@
 
             // Score out of 100
             const finalScore = Math.round((totalCorrect / totalQuestions) * 100); 
-            let tingkatSkill = finalScore >= 80 ? "Mahir" : (finalScore >= 55 ? "Menengah" : "Pemula");
+            // Klasifikasi Skill baru
+            let tingkatSkill = finalScore >= 80 ? "Expert" : (finalScore >= 55 ? "Moderate" : "Beginner");
+
+            // Hitung Durasi (70 menit = 4200 detik)
+            const maxTimeInSeconds = 70 * 60;
+            const timeSpentInSeconds = maxTimeInSeconds - timeLeft;
+            const spentMin = Math.floor(timeSpentInSeconds / 60);
+            const spentSec = timeSpentInSeconds % 60;
+            const durasiText = `${spentMin} Menit ${spentSec} Detik`;
 
             // Format Detail
             let detailArr = [];
@@ -676,6 +684,7 @@
                     kelas: studentClass,
                     skor: finalScore,
                     tingkat_skill: tingkatSkill,
+                    durasi: durasiText, // Kirim durasi ke Apps Script
                     detail: detailText
                 }
             };
