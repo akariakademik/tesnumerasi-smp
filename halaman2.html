@@ -229,7 +229,7 @@
     <div class="container" id="quizContainer">
         <div class="header-card">
             <h1>Ujian Numerasi SMP (HOTS)</h1>
-            <p>Jawablah 25 soal adaptif di bawah ini dengan teliti. Soal disusun untuk mengukur kemampuan logika, analisis geometri, dan pemecahan masalah matematikamu.</p>
+            <p>Jawablah 40 soal adaptif di bawah ini dengan teliti. Soal disusun untuk mengukur kemampuan logika, analisis, dan pemecahan masalah matematikamu tingkat lanjut.</p>
             <div class="student-info" id="studentInfo">
                 Memuat data siswa...
             </div>
@@ -267,7 +267,7 @@
 
     <script>
         // URL APPS SCRIPT (SAMA DENGAN HALAMAN 1)
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxCfLz4KAaP9qUhhCmzgFGQk0Se1lWAO8VPTAvZD8WjSFJbLj1VxSTJQKta_jCNvMUv/exec'; 
+        const scriptURL = 'URL_WEB_APP_APPS_SCRIPT_KAMU_DISINI'; 
 
         // Mengambil data dari localStorage yang disimpan di Halaman 1
         const studentName = localStorage.getItem('akari_nama') || 'Siswa Tanpa Nama';
@@ -276,7 +276,7 @@
         document.getElementById('studentInfo').innerText = `Peserta: ${studentName} | ${studentClass}`;
 
         const bankSoal = [
-            // Topik 1: Bilangan Bulat dan Rasional Lanjutan
+            // Topik 1: Bilangan Bulat dan Rasional
             { topic: 'Bilangan Bulat & Rasional', q: 'Suhu di kota A pada pagi hari -5°C. Pada siang hari suhunya naik 12°C, namun pada malam hari turun drastis 9°C. Suhu kota A pada malam hari adalah...', options: ['-2°C', '2°C', '-11°C', '16°C'], ans: 0 },
             { topic: 'Bilangan Bulat & Rasional', q: 'Hasil dari operasi akar dan pangkat: √144 - ∛343 + 2³ adalah...', options: ['10', '13', '15', '27'], ans: 1 },
             { topic: 'Bilangan Bulat & Rasional', q: 'Sebuah kapal selam berada 150 meter di bawah permukaan laut. Kapal itu naik 45 meter untuk mengecek sistem, lalu menyelam kembali sejauh 75 meter. Posisi kapal sekarang berada pada kedalaman...', options: ['-105 m', '-120 m', '-180 m', '-270 m'], ans: 2 },
@@ -290,12 +290,15 @@
             { topic: 'Aljabar Dasar', q: 'Jumlah tiga bilangan genap yang berurutan adalah 72. Bilangan yang nilainya paling besar dari ketiga bilangan tersebut adalah...', options: ['22', '24', '26', '28'], ans: 2 },
             { topic: 'Aljabar Dasar', q: 'Bentuk pemfaktoran dari persamaan kuadrat x² - 7x + 12 adalah...', options: ['(x-3)(x+4)', '(x+3)(x-4)', '(x-3)(x-4)', '(x+3)(x+4)'], ans: 2 },
 
-            // Topik 3: Persamaan & Pertidaksamaan Linear
-            { topic: 'Persamaan & Pertidaksamaan', q: 'Penyelesaian dari persamaan linear ½(x - 4) = ⅓(2x - 1) adalah...', options: ['x = -10', 'x = 10', 'x = -5', 'x = 5'], ans: 0 },
-            { topic: 'Persamaan & Pertidaksamaan', q: 'Umur ayah 3 kali lipat dari umur anaknya. Jika selisih umur mereka berdua adalah 26 tahun, berapakah umur ayah 5 tahun yang akan datang?', options: ['39 tahun', '42 tahun', '44 tahun', '49 tahun'], ans: 2 },
-            { topic: 'Persamaan & Pertidaksamaan', q: 'Himpunan penyelesaian dari pertidaksamaan 2(3x - 4) ≥ 4(x + 1) adalah...', options: ['x ≤ 6', 'x ≥ 6', 'x ≥ 4', 'x ≤ 4'], ans: 1 },
-            { topic: 'Persamaan & Pertidaksamaan', q: 'Di toko buku, harga 3 buku dan 2 pensil adalah Rp21.000. Sedangkan harga 2 buku dan 3 pensil adalah Rp19.000. Harga untuk 1 buku dan 1 pensil secara bersamaan adalah...', options: ['Rp7.000', 'Rp7.500', 'Rp8.000', 'Rp8.500'], ans: 2 },
-            { topic: 'Persamaan & Pertidaksamaan', q: 'Sebuah tempat parkir memuat 84 kendaraan yang terdiri dari sepeda motor dan mobil. Jika dihitung jumlah seluruh roda kendaraan ada 220 buah, maka banyak mobil yang parkir adalah...', options: ['26 mobil', '32 mobil', '58 mobil', '60 mobil'], ans: 0 },
+            // Topik 3: Persamaan & Fungsi Linear (Diperluas dengan soal HOTS Uang Saku & Gradien)
+            { topic: 'Persamaan & Fungsi Linear', q: 'Penyelesaian dari persamaan linear ½(x - 4) = ⅓(2x - 1) adalah...', options: ['x = -10', 'x = 10', 'x = -5', 'x = 5'], ans: 0 },
+            { topic: 'Persamaan & Fungsi Linear', q: 'Umur ayah 3 kali lipat dari umur anaknya. Jika selisih umur mereka berdua adalah 26 tahun, berapakah umur ayah 5 tahun yang akan datang?', options: ['39 tahun', '42 tahun', '44 tahun', '49 tahun'], ans: 2 },
+            { topic: 'Persamaan & Fungsi Linear', q: 'Di toko buku, harga 3 buku dan 2 pensil adalah Rp21.000. Sedangkan harga 2 buku dan 3 pensil adalah Rp19.000. Harga untuk 1 buku dan 1 pensil secara bersamaan adalah...', options: ['Rp7.000', 'Rp7.500', 'Rp8.000', 'Rp8.500'], ans: 2 },
+            { topic: 'Persamaan & Fungsi Linear', q: 'Tiga bersaudara Ana, Bona, dan Cinta mendapatkan uang saku bulanan dalam pecahan Rp5.000, Rp10.000, dan Rp20.000. Ana mendapat x lembar Rp5k, y lembar Rp10k, z lembar Rp20k. Bona mendapat y lembar Rp5k, z lembar Rp10k, x lembar Rp20k. Cinta mendapat z lembar Rp5k, x lembar Rp10k, y lembar Rp20k. Jika total uang saku ketiganya Rp700.000, kesimpulan yang benar adalah...', options: ['Ana mendapatkan uang saku sejumlah tepat 20 lembar.', 'Bona mendapatkan uang saku dengan nilai terbesar.', 'Cinta mendapatkan uang saku dengan nilai terkecil.', 'Mereka mendapatkan uang saku lembaran Rp10.000 yang sama banyaknya.'], ans: 0 },
+            { topic: 'Persamaan & Fungsi Linear', image: 'gradien.jpg', q: 'Perhatikan grafik tiga persamaan garis pada gambar. Pernyataan yang benar mengenai hubungan ketiga garis tersebut adalah...', options: ['Garis hijau dan merah sejajar, serta tegak lurus dengan garis biru', 'Garis merah dan biru sejajar, serta tegak lurus dengan garis hijau', 'Ketiga garis saling berpotongan di satu titik', 'Ketiga garis memiliki gradien yang bernilai sama'], ans: 0 },
+            { topic: 'Persamaan & Fungsi Linear', q: 'Diketahui fungsi linear f(x) = ax + b. Jika f(2) = 7 dan f(-1) = 1, maka nilai dari f(5) adalah...', options: ['10', '11', '13', '15'], ans: 2 },
+            { topic: 'Persamaan & Fungsi Linear', q: 'Gradien garis yang tegak lurus dengan garis 3x - 4y + 12 = 0 adalah...', options: ['3/4', '-3/4', '4/3', '-4/3'], ans: 3 },
+            { topic: 'Persamaan & Fungsi Linear', q: 'Titik potong grafik fungsi y = x² - 5x + 6 terhadap sumbu-x adalah...', options: ['(2,0) dan (3,0)', '(-2,0) dan (-3,0)', '(0,2) dan (0,3)', '(0,6)'], ans: 0 },
 
             // Topik 4: Aritmatika Sosial
             { topic: 'Aritmatika Sosial', q: 'Seorang pedagang membeli barang Rp120.000. Ia menjual barang tersebut dengan diskon 20% namun masih mendapatkan keuntungan 10% dari modal. Harga banderol (label) barang tersebut adalah...', options: ['Rp145.000', 'Rp150.000', 'Rp165.000', 'Rp180.000'], ans: 2 },
@@ -318,19 +321,35 @@
             { topic: 'Himpunan (Sets)', q: 'Jika banyaknya anggota n(A) = 15, n(B) = 12, dan irisan n(A ∩ B) = 5, maka berapakah jumlah anggota gabungan n(A ∪ B)?', options: ['22', '27', '32', '17'], ans: 0 },
             { topic: 'Himpunan (Sets)', q: 'Dari sekelompok remaja berisi 30 orang, 15 orang gemar voli, dan 18 orang gemar basket. Jika ada 8 orang yang gemar memainkan keduanya, maka jumlah remaja yang TIDAK gemar keduanya adalah...', options: ['3 orang', '5 orang', '7 orang', '9 orang'], ans: 1 },
 
-            // Topik 7: Geometri Menengah (TERDAPAT GAMBAR SESUAI REQUEST)
-            { topic: 'Geometri Menengah', image: 'sudut garis.jpg', q: 'Perhatikan gambar dua garis sejajar (l dan m) yang dipotong oleh sebuah transversal (t)! Jika besar sudut nomor 1 adalah 115°, maka besar sudut nomor 6 adalah...', options: ['115°', '85°', '65°', '55°'], ans: 2 },
-            { topic: 'Geometri Menengah', image: 'juring lingkaran.jpg', q: 'Sebuah juring lingkaran OAB memiliki sudut pusat θ = 72°. Jika jari-jari lingkaran (O-A) adalah 10 cm, berapakah luas daerah juring yang diarsir tersebut? (gunakan π = 3,14)', options: ['31,4 cm²', '62,8 cm²', '78,5 cm²', '157 cm²'], ans: 1 },
-            { topic: 'Geometri Menengah', image: 'kerucut terpancung.png', q: 'Sebuah bangun kerucut terpancung memiliki jari-jari alas bawah 10 cm dan jari-jari alas atas 5 cm. Jika tinggi kerucut terpancung tersebut adalah 12 cm, berapakah panjang garis pelukisnya (sisi miringnya)?', options: ['13 cm', '14 cm', '15 cm', '17 cm'], ans: 0 },
-            { topic: 'Geometri Menengah', image: 'tabungkerucut.jpg', q: 'Bangun ruang gabungan di atas terdiri dari tabung dan kerucut. Jika tinggi tabung (t) = 10 cm, tinggi kerucut (h) = 12 cm, dan jari-jari alasnya 5 cm, berapakah estimasi volume total bangun tersebut? (π ≈ 3,14)', options: ['942 cm³', '1.099 cm³', '1.256 cm³', '1.413 cm³'], ans: 1 },
-            { topic: 'Geometri Menengah', image: 'luasgabungan.jpg', q: 'Perhatikan bangun datar di atas! Terdapat persegi panjang yang salah satu sudutnya dipotong menyerupai seperempat lingkaran. Berdasarkan ukuran yang tertera pada gambar, keliling dari bangun tersebut adalah... (gunakan π = 3,14)', options: ['38,52', '41,42', '46,28', '52,00'], ans: 1 },
+            // Topik 7: Geometri & Transformasi
+            { topic: 'Geometri & Transformasi', image: 'sudut garis.jpg', q: 'Perhatikan gambar dua garis sejajar (l dan m) yang dipotong oleh sebuah transversal (t)! Jika besar sudut nomor 1 adalah 115°, maka besar sudut nomor 6 adalah...', options: ['115°', '85°', '65°', '55°'], ans: 2 },
+            { topic: 'Geometri & Transformasi', image: 'juring lingkaran.jpg', q: 'Sebuah juring lingkaran OAB memiliki sudut pusat θ = 72°. Jika jari-jari lingkaran (O-A) adalah 10 cm, berapakah luas daerah juring yang diarsir tersebut? (gunakan π = 3,14)', options: ['31,4 cm²', '62,8 cm²', '78,5 cm²', '157 cm²'], ans: 1 },
+            { topic: 'Geometri & Transformasi', image: 'kerucut terpancung.png', q: 'Sebuah bangun kerucut terpancung memiliki jari-jari alas bawah 10 cm dan jari-jari alas atas 5 cm. Jika tinggi kerucut terpancung tersebut adalah 12 cm, berapakah panjang garis pelukisnya (sisi miringnya)?', options: ['13 cm', '14 cm', '15 cm', '17 cm'], ans: 0 },
+            { topic: 'Geometri & Transformasi', image: 'tabungkerucut.jpg', q: 'Bangun ruang gabungan di atas terdiri dari tabung dan kerucut. Jika tinggi tabung (t) = 10 cm, tinggi kerucut (h) = 12 cm, dan jari-jari alasnya 5 cm, berapakah estimasi volume total bangun tersebut? (π ≈ 3,14)', options: ['942 cm³', '1.099 cm³', '1.256 cm³', '1.413 cm³'], ans: 1 },
+            { topic: 'Geometri & Transformasi', image: 'luasgabungan.jpg', q: 'Perhatikan bangun datar di atas! Terdapat persegi panjang yang salah satu sudutnya dipotong menyerupai seperempat lingkaran. Berdasarkan ukuran yang tertera pada gambar, keliling dari bangun tersebut adalah... (gunakan π = 3,14)', options: ['38,52', '41,42', '46,28', '52,00'], ans: 1 },
+            { topic: 'Geometri & Transformasi', image: 'transformasi.jpg', q: 'Perhatikan jajargenjang ABCD pada bidang koordinat. Jika jajargenjang tersebut direfleksikan (dicerminkan) terhadap sumbu-y, lalu ditranslasikan sebesar (3, -2), maka koordinat bayangan akhir dari titik A adalah...', options: ['(-1, 4)', '(1, 0)', '(-5, 0)', '(5, 4)'], ans: 1 },
 
-            // Topik 8: Statistika Dasar & Peluang
-            { topic: 'Statistika & Peluang', q: 'Rata-rata nilai ulangan 10 siswa adalah 75. Setelah 2 siswa susulan baru bergabung, rata-rata kelasnya berubah menjadi 76. Berapakah rata-rata nilai kedua siswa susulan tersebut?', options: ['78', '81', '83', '85'], ans: 1 },
-            { topic: 'Statistika & Peluang', q: 'Dalam sebuah kotak tertutup terdapat 5 kelereng merah, 4 kelereng biru, dan 3 kelereng kuning. Jika diambil satu kelereng secara acak, peluang terambilnya BUKAN kelereng biru adalah...', options: ['1/3', '1/2', '2/3', '3/4'], ans: 2 },
-            { topic: 'Statistika & Peluang', q: 'Diketahui nilai ulangan matematika Budi: 7, 8, 8, 9, x, 6. Jika rata-ratanya adalah 7.5, maka nilai median dari data tersebut adalah...', options: ['7.0', '7.5', '8.0', '8.5'], ans: 1 },
-            { topic: 'Statistika & Peluang', q: 'Dua buah dadu standar dilempar undi secara bersamaan. Berapakah peluang munculnya total mata dadu berjumlah 7 atau berjumlah 10?', options: ['1/6', '1/4', '1/3', '5/18'], ans: 1 },
-            { topic: 'Statistika & Peluang', q: 'Diketahui sekumpulan data terurut: 5, 6, 7, 7, 8, 9, 10. Selisih antara kuartil atas (Q3) dan kuartil bawah (Q1) atau sering disebut Jangkauan Interkuartil dari data tersebut adalah...', options: ['2', '3', '4', '5'], ans: 1 }
+            // Topik 8: Statistika Data
+            { topic: 'Statistika Data', q: 'Rata-rata nilai ulangan 10 siswa adalah 75. Setelah 2 siswa susulan baru bergabung, rata-rata kelasnya berubah menjadi 76. Berapakah rata-rata nilai kedua siswa susulan tersebut?', options: ['78', '81', '83', '85'], ans: 1 },
+            { topic: 'Statistika Data', q: 'Diketahui nilai ulangan matematika Budi: 7, 8, 8, 9, x, 6. Jika rata-ratanya adalah 7.5, maka nilai median dari data tersebut adalah...', options: ['7.0', '7.5', '8.0', '8.5'], ans: 1 },
+            { topic: 'Statistika Data', q: 'Diketahui sekumpulan data terurut: 5, 6, 7, 7, 8, 9, 10. Selisih antara kuartil atas (Q3) dan kuartil bawah (Q1) atau sering disebut Jangkauan Interkuartil dari data tersebut adalah...', options: ['2', '3', '4', '5'], ans: 1 },
+            { topic: 'Statistika Data', q: 'Suatu data terdiri dari 35 bilangan bulat positif dengan median 22 dan bilangan terbesar 29. Misalkan rata-rata terkecil yang mungkin adalah x dan rata-rata terbesar adalah y, nilai dari x + y = ....', options: ['40,4', '37,4', '36,4', '25,4'], ans: 1 },
+            { topic: 'Statistika Data', q: 'Rata-rata nilai matematika dari 15 siswa laki-laki adalah 76, sedangkan rata-rata 20 siswa perempuan adalah 83. Rata-rata nilai matematika seluruh siswa di kelas gabungan tersebut adalah...', options: ['79,0', '79,5', '80,0', '80,5'], ans: 2 },
+
+            // Topik 9: Peluang & Kombinatorika
+            { topic: 'Peluang & Kombinatorika', q: 'Dalam sebuah kotak tertutup terdapat 5 kelereng merah, 4 kelereng biru, dan 3 kelereng kuning. Jika diambil satu kelereng secara acak, peluang terambilnya BUKAN kelereng biru adalah...', options: ['1/3', '1/2', '2/3', '3/4'], ans: 2 },
+            { topic: 'Peluang & Kombinatorika', q: 'Dua buah dadu standar dilempar undi secara bersamaan. Berapakah peluang munculnya total mata dadu berjumlah 7 atau berjumlah 10?', options: ['1/6', '1/4', '1/3', '5/18'], ans: 1 },
+            { topic: 'Peluang & Kombinatorika', q: 'Dua buah dadu standar dilempar undi secara bersamaan. Peluang munculnya mata dadu yang hasil kalinya adalah bilangan ganjil ATAU berjumlah 7 adalah...', options: ['5/12', '1/4', '7/36', '11/36'], ans: 0 },
+            { topic: 'Peluang & Kombinatorika', q: 'Dari angka 1, 2, 3, 4, 5, dan 6 akan dibentuk bilangan genap yang terdiri dari 3 angka berbeda. Banyaknya susunan bilangan genap yang dapat dibentuk adalah...', options: ['120', '60', '30', '40'], ans: 1 },
+            { topic: 'Peluang & Kombinatorika', q: 'Dalam sebuah tes, siswa diwajibkan mengerjakan 8 dari 10 soal yang tersedia. Jika soal nomor 1 sampai 3 wajib dikerjakan, banyaknya pilihan susunan soal yang dapat diambil siswa adalah...', options: ['10', '21', '35', '56'], ans: 1 },
+            { topic: 'Peluang & Kombinatorika', q: 'Dalam sebuah kantong terdapat 5 kelereng merah dan 3 kelereng putih. Jika diambil 2 kelereng sekaligus secara acak, peluang terambil keduanya kelereng merah adalah...', options: ['5/14', '2/9', '5/28', '15/28'], ans: 0 },
+
+            // Topik 10: Pola Bilangan & Deret
+            { topic: 'Pola Bilangan & Deret', q: 'Diketahui barisan geometri: 80, x, y, z, 3125. Nilai terkecil yang mungkin dari x - y + z adalah...', options: ['-3120', '-1950', '480', '950'], ans: 1 },
+            { topic: 'Pola Bilangan & Deret', q: 'Suku ke-n dari suatu barisan aritmatika dirumuskan dengan Un = 3n - 5. Jumlah 10 suku pertama dari barisan tersebut adalah...', options: ['115', '125', '230', '250'], ans: 0 },
+            { topic: 'Pola Bilangan & Deret', q: 'Suatu barisan geometri memiliki suku ke-2 = 6 dan suku ke-5 = 48. Rasio dari barisan geometri tersebut adalah...', options: ['2', '3', '4', '8'], ans: 0 },
+            { topic: 'Pola Bilangan & Deret', q: 'Dua suku berikutnya dari pola bilangan 2, 5, 10, 17, 26, ... adalah...', options: ['35 dan 46', '37 dan 48', '37 dan 50', '39 dan 52'], ans: 2 },
+            { topic: 'Pola Bilangan & Deret', q: 'Pertambahan penduduk suatu desa setiap tahun diasumsikan mengikuti aturan barisan geometri. Pada tahun 2021 bertambah 10 orang, tahun 2023 bertambah 90 orang. Pertambahan pada tahun 2024 adalah...', options: ['180 orang', '270 orang', '360 orang', '810 orang'], ans: 1 }
         ];
 
         // Fungsi untuk mengacak urutan array (Fisher-Yates Shuffle)
@@ -345,18 +364,46 @@
         let selectedQuestions = [];
         const uniqueTopics = [...new Set(bankSoal.map(item => item.topic))];
 
-        // Memilih soal: 4 dari Geometri, 3 dari topik lainnya (Total 25)
+        // Kuota per topik agar total pas 40 soal
+        const quotas = {
+            'Bilangan Bulat & Rasional': 4,
+            'Aljabar Dasar': 4,
+            'Persamaan & Fungsi Linear': 4, // 1 gambar (gradien) + 3 teks
+            'Aritmatika Sosial': 4,
+            'Perbandingan & Skala': 4,
+            'Himpunan (Sets)': 3,
+            'Geometri & Transformasi': 6, // 6 gambar geometri wajib keluar semua
+            'Statistika Data': 4,
+            'Peluang & Kombinatorika': 4,
+            'Pola Bilangan & Deret': 3
+        };
+
+        // Memilih soal: Wajibkan SEMUA soal gambar keluar, sisanya adaptif (acak) dari soal teks
         uniqueTopics.forEach(topic => {
             let soalTopikIni = bankSoal.filter(item => item.topic === topic);
-            shuffleArray(soalTopikIni);
             
-            // Aturan khusus adaptif: Perbanyak soal yang bergambar (Geometri Menengah)
-            let jumlahDiambil = (topic === 'Geometri Menengah') ? 4 : 3;
+            // Pisahkan soal yang ada gambar dan tidak ada gambar
+            let soalGambar = soalTopikIni.filter(item => item.image);
+            let soalTeks = soalTopikIni.filter(item => !item.image);
             
-            selectedQuestions.push(...soalTopikIni.slice(0, jumlahDiambil)); 
+            // Acak urutan soal yang tidak bergambar
+            shuffleArray(soalTeks);
+            
+            // Prioritas Utama: Masukkan SEMUA soal bergambar terlebih dahulu 
+            let selectedForTopic = [...soalGambar];
+            
+            // Hitung sisa slot/kuota yang dibutuhkan untuk topik ini
+            let sisaKuota = (quotas[topic] || 4) - selectedForTopic.length;
+            
+            // Jika masih butuh soal, tambahkan dari soal teks yang sudah diacak
+            if (sisaKuota > 0) {
+                selectedForTopic.push(...soalTeks.slice(0, sisaKuota));
+            }
+            
+            selectedQuestions.push(...selectedForTopic); 
         });
 
-        // Acak lagi urutan akhir agar topiknya saling silang (tidak berurutan blok)
+        // Terakhir, acak urutan akhir ke-40 soal terpilih agar topiknya saling silang
         shuffleArray(selectedQuestions);
 
         const questionsWrapper = document.getElementById('questionsWrapper');
@@ -412,13 +459,12 @@
 
             // 1. Proses Penilaian / Koreksi
             let totalCorrect = 0;
-            let totalQuestions = selectedQuestions.length; // Pasti 25
+            let totalQuestions = selectedQuestions.length; // Pasti 40 Soal
             let topicStats = {};
             
-            // Inisialisasi format laporan topik
+            // Inisialisasi format laporan topik secara dinamis sesuai kuota baru
             uniqueTopics.forEach(t => {
-                let targetTotal = (t === 'Geometri Menengah') ? 4 : 3;
-                topicStats[t] = { correct: 0, total: targetTotal }; 
+                topicStats[t] = { correct: 0, total: quotas[t] || 4 };
             });
 
             // Cek setiap jawaban
