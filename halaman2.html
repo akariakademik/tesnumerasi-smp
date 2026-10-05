@@ -288,7 +288,7 @@
             <p style="margin-bottom: 20px; color: var(--text-muted);">Selamat datang, <strong id="prepStudentName">Siswa</strong>. Silakan baca peraturan sebelum memulai.</p>
             
             <ul class="rules-list">
-                <li>✅ Kuis ini terdiri dari <strong>30 Soal Numerasi</strong> (Pilihan Ganda).</li>
+                <li>✅ Kuis ini terdiri dari <strong>30 Soal Adaptif</strong> (Pilihan Ganda).</li>
                 <li>✅ Waktu pengerjaan adalah <strong>70 Menit</strong> tanpa jeda.</li>
                 <li>✅ Siapkan kertas buram dan alat tulis untuk berhitung.</li>
                 <li>✅ <strong>TIDAK ADA PENGURANGAN NILAI</strong> jika jawaban salah. Kosongkan jika tidak tahu, namun disarankan untuk dijawab semua.</li>
@@ -368,7 +368,7 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyrBvkJXNqy1LVa6KvOtnCJhPUuZmrnyc4akWOAfJtdq_BDNvyS7R7sMKYCVzFym--b/exec'; 
+        const scriptURL = 'URL_WEB_APP_APPS_SCRIPT_KAMU_DISINI'; 
 
         const studentName = localStorage.getItem('akari_nama') || 'Siswa Tanpa Nama';
         const studentClass = localStorage.getItem('akari_kelas') || 'Kelas Tidak Diketahui';
@@ -640,6 +640,7 @@
             document.getElementById('loadingOverlay').style.display = 'flex';
 
             let totalCorrect = 0;
+            let totalKosong = 0; // Tambahan variabel kosong
             let topicStats = {};
             
             // Setup stats map
@@ -651,28 +652,48 @@
             finalQuestions.forEach((q, index) => {
                 topicStats[q.topic].total++;
                 const selectedOption = document.querySelector(`input[name="question_${index}"]:checked`);
-                if (selectedOption && parseInt(selectedOption.value) === q.ans) {
-                    totalCorrect++;
-                    topicStats[q.topic].correct++;
+                
+                if (selectedOption) {
+                    if (parseInt(selectedOption.value) === q.ans) {
+                        totalCorrect++;
+                        topicStats[q.topic].correct++;
+                    }
+                } else {
+                    totalKosong++; // Hitung jika tidak ada opsi yang dipilih
                 }
             });
 
+            // Hitung Salah
+            let totalSalah = totalQuestions - totalCorrect - totalKosong;
+
             // Score out of 100
             const finalScore = Math.round((totalCorrect / totalQuestions) * 100); 
-            // Klasifikasi Skill baru
             let tingkatSkill = finalScore >= 80 ? "Expert" : (finalScore >= 55 ? "Moderate" : "Beginner");
 
-            // Hitung Durasi (70 menit = 4200 detik)
+            // Hitung Durasi 
             const maxTimeInSeconds = 70 * 60;
             const timeSpentInSeconds = maxTimeInSeconds - timeLeft;
             const spentMin = Math.floor(timeSpentInSeconds / 60);
             const spentSec = timeSpentInSeconds % 60;
             const durasiText = `${spentMin} Menit ${spentSec} Detik`;
 
-            // Format Detail
+            // Format Detail & Kategori per Topik
             let detailArr = [];
+            let kategoriTopikArr = [];
+
             for (const [topic, stat] of Object.entries(topicStats)) {
-                if(stat.total > 0) detailArr.push(`${topic.split(' ')[0]}: ${stat.correct}/${stat.total}`);
+                if(stat.total > 0) {
+                    let shortTopic = topic.split(' ')[0]; // Ambil kata pertama (cth: "Bilangan", "Aljabar")
+                    detailArr.push(`${shortTopic}: ${stat.correct}/${stat.total}`);
+
+                    // Menentukan Predikat Topik
+                    let persentaseTopik = stat.correct / stat.total;
+                    let predikat = "Need Improvement";
+                    if (persentaseTopik >= 0.8) predikat = "Excellence";
+                    else if (persentaseTopik >= 0.5) predikat = "Good";
+
+                    kategoriTopikArr.push(`${shortTopic} : ${predikat}`);
+                }
             }
             const detailText = detailArr.join(' | ');
 
@@ -683,9 +704,23 @@
                     nama: studentName,
                     kelas: studentClass,
                     skor: finalScore,
+                    benar: totalCorrect,
+                    salah: totalSalah,
+                    kosong: totalKosong,
                     tingkat_skill: tingkatSkill,
-                    durasi: durasiText, // Kirim durasi ke Apps Script
-                    detail: detailText
+                    durasi: durasiText, 
+                    detail: detailText,
+                    // Memasukkan array kategori ke 10 variabel terpisah
+                    kat_1: kategoriTopikArr[0] || "-",
+                    kat_2: kategoriTopikArr[1] || "-",
+                    kat_3: kategoriTopikArr[2] || "-",
+                    kat_4: kategoriTopikArr[3] || "-",
+                    kat_5: kategoriTopikArr[4] || "-",
+                    kat_6: kategoriTopikArr[5] || "-",
+                    kat_7: kategoriTopikArr[6] || "-",
+                    kat_8: kategoriTopikArr[7] || "-",
+                    kat_9: kategoriTopikArr[8] || "-",
+                    kat_10: kategoriTopikArr[9] || "-"
                 }
             };
 
