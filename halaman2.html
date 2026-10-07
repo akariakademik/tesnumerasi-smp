@@ -368,7 +368,7 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxtttAfkvElaN1p0ihDgz_t2pW_5FGvPv9v3kF8CO8JbOZkfaYcAF6WXljtfJRJOZOz/exec'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyQyq5TYr-Pq92Fn9zeodelKLNK-u9GAQDZKvbG1G78Cqu-KMimkeuOmtKX8mA7K9L_/exec'; 
 
         const studentName = localStorage.getItem('akari_nama') || 'Siswa Tanpa Nama';
         const studentClass = localStorage.getItem('akari_kelas') || 'Kelas Tidak Diketahui';
@@ -503,7 +503,39 @@
 
         let currentIndex = 0;
         let timerInterval;
-        let timeLeft = 70 * 60; // 70 menit
+        const TOTAL_TIME_SEC = 70 * 60; // 70 menit
+
+        // -- TAMBAHAN CBT: Cek jika ada ujian yang sedang berlangsung saat direfresh --
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('akari_cbt_endTime')) {
+                resumeTest(); // Potong kompas, langsung masuk ke soal ujian
+            }
+        });
+
+        function resumeTest() {
+            document.getElementById('preparationScreen').style.display = 'none';
+            document.getElementById('testScreen').style.display = 'flex';
+            
+            // 1. Tarik soal yang tersimpan agar tidak teracak ulang
+            const savedQs = localStorage.getItem('akari_cbt_questions');
+            if (savedQs) finalQuestions = JSON.parse(savedQs);
+            
+            buildTestUI();
+            
+            // 2. Tarik jawaban siswa sebelumnya agar tidak hilang
+            const savedAnswers = JSON.parse(localStorage.getItem('akari_cbt_answers') || '{}');
+            for (let i = 0; i < finalQuestions.length; i++) {
+                if (savedAnswers[i] !== undefined) {
+                    const radio = document.getElementById(`q${i}_opt${savedAnswers[i]}`);
+                    if (radio) {
+                        radio.checked = true;
+                        document.getElementById(`nav_box_${i}`).classList.add('answered');
+                    }
+                }
+            }
+            startTimerInterval();
+        }
+        // --------------------------------------------------------------------------
 
         function buildTestUI() {
             const container = document.getElementById('questionsContainer');
@@ -562,21 +594,41 @@
             
             buildTestUI();
             
-            // Start Timer
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    autoSubmit();
-                } else if (timeLeft <= 300) { // 5 menit terakhir peringatan merah berkedip
-                    document.getElementById('timerBox').classList.add('warning');
-                }
-            }, 1000);
+            // Simpan paket soal ke memori agar saat refresh tidak berubah
+            localStorage.setItem('akari_cbt_questions', JSON.stringify(finalQuestions));
+            
+            // Set waktu berakhir = Waktu nyata saat ini + 70 Menit ke depan
+            const endTime = Date.now() + (TOTAL_TIME_SEC * 1000);
+            localStorage.setItem('akari_cbt_endTime', endTime);
+            
+            startTimerInterval();
+        }
+
+        function startTimerInterval() {
+            updateTimerDisplay(); // Panggil sekali di detik ke-0 agar tidak delay
+            timerInterval = setInterval(updateTimerDisplay, 1000);
         }
 
         function updateTimerDisplay() {
+            const endTime = parseInt(localStorage.getItem('akari_cbt_endTime'));
+            if (!endTime) return;
+
+            // Hitung sisa waktu mengacu pada jam sistem nyata (kebal freeze)
+            let timeLeft = Math.floor((endTime - Date.now()) / 1000);
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timeDisplay').innerText = "00:00";
+                autoSubmit();
+                return;
+            } 
+            
+            if (timeLeft <= 300) { 
+                document.getElementById('timerBox').classList.add('warning');
+            } else {
+                document.getElementById('timerBox').classList.remove('warning');
+            }
+
             let minutes = Math.floor(timeLeft / 60);
             let seconds = timeLeft % 60;
             document.getElementById('timeDisplay').innerText = 
@@ -610,6 +662,14 @@
 
         function markAnswered(index) {
             document.getElementById(`nav_box_${index}`).classList.add('answered');
+            
+            // Simpan jawaban siswa secara real-time setiap kali mengklik opsi
+            const selectedOption = document.querySelector(`input[name="question_${index}"]:checked`);
+            if (selectedOption) {
+                let savedAnswers = JSON.parse(localStorage.getItem('akari_cbt_answers') || '{}');
+                savedAnswers[index] = selectedOption.value;
+                localStorage.setItem('akari_cbt_answers', JSON.stringify(savedAnswers));
+            }
         }
 
         function confirmSubmit() {
@@ -670,9 +730,13 @@
             const finalScore = Math.round((totalCorrect / totalQuestions) * 100); 
             let tingkatSkill = finalScore >= 80 ? "Expert" : (finalScore >= 55 ? "Moderate" : "Beginner");
 
-            // Hitung Durasi 
-            const maxTimeInSeconds = 70 * 60;
-            const timeSpentInSeconds = maxTimeInSeconds - timeLeft;
+            // Hitung Durasi (UPDATE MENGGUNAKAN WAKTU ASLI)
+            const endTime = parseInt(localStorage.getItem('akari_cbt_endTime'));
+            let timeSpentInSeconds = TOTAL_TIME_SEC; 
+            if (endTime) {
+                const timeLeftNow = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+                timeSpentInSeconds = TOTAL_TIME_SEC - timeLeftNow;
+            }
             const spentMin = Math.floor(timeSpentInSeconds / 60);
             const spentSec = timeSpentInSeconds % 60;
             const durasiText = `${spentMin} Menit ${spentSec} Detik`;
@@ -734,6 +798,12 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
                 if (data.status === 'success') {
                     document.getElementById('resultContainer').style.display = 'block';
+                    
+                    // BERSIHKAN MEMORI UJIAN SETELAH SUKSES SUBMIT
+                    // Agar jika dia buka web lagi, bisa ikut tes dari awal.
+                    localStorage.removeItem('akari_cbt_endTime');
+                    localStorage.removeItem('akari_cbt_questions');
+                    localStorage.removeItem('akari_cbt_answers');
                 } else {
                     alert("Respon API gagal: " + data.message);
                 }
