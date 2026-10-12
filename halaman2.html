@@ -269,6 +269,14 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         #resultContainer { display: none; max-width: 600px; margin: 40px auto; text-align: center; background: white; padding: 40px; border-radius: 16px; }
+        .result-stats { display: flex; justify-content: center; gap: 15px; margin: 25px 0; flex-wrap: wrap; }
+        .stat-box { background: #f8fafc; border: 1px solid var(--border-color); padding: 15px 20px; border-radius: 12px; min-width: 100px; }
+        .stat-box h4 { font-size: 24px; margin-bottom: 5px; }
+        .stat-box p { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; color: var(--text-muted); }
+        .stat-score h4 { color: var(--primary-color); font-size: 32px; }
+        .stat-benar h4 { color: var(--success-color); }
+        .stat-salah h4 { color: var(--danger-color); }
+        .stat-kosong h4 { color: var(--warning-color); }
 
         @media (max-width: 850px) {
             .cbt-container { grid-template-columns: 1fr; }
@@ -356,8 +364,28 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2" stroke-linecap="round" style="margin: 0 auto 20px auto; display: block;">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        <h2 style="color: var(--success-color); margin-bottom: 10px;">Tes Selesai!</h2>
-        <p style="color: var(--text-muted); margin-bottom: 25px;">Hasil CBT kamu sudah direkap dan berhasil dikirim ke sistem Akari Bimbel.</p>
+        <h2 style="color: var(--success-color); margin-bottom: 10px;">Ujian Selesai!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 15px;">Hasil CBT kamu telah berhasil disimpan ke sistem Akari Bimbel.</p>
+        
+        <div class="result-stats">
+            <div class="stat-box stat-score">
+                <h4 id="resSkor">0</h4>
+                <p>Skor Akhir</p>
+            </div>
+            <div class="stat-box stat-benar">
+                <h4 id="resBenar">0</h4>
+                <p>Benar</p>
+            </div>
+            <div class="stat-box stat-salah">
+                <h4 id="resSalah">0</h4>
+                <p>Salah</p>
+            </div>
+            <div class="stat-box stat-kosong">
+                <h4 id="resKosong">0</h4>
+                <p>Kosong</p>
+            </div>
+        </div>
+
         <button class="btn btn-primary" onclick="window.location.href='index.html'" style="margin: 0 auto;">Kembali ke Halaman Utama</button>
     </div>
 
@@ -368,7 +396,7 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyQyq5TYr-Pq92Fn9zeodelKLNK-u9GAQDZKvbG1G78Cqu-KMimkeuOmtKX8mA7K9L_/exec'; 
+        const scriptURL = 'URL_WEB_APP_APPS_SCRIPT_KAMU_DISINI'; 
 
         const studentName = localStorage.getItem('akari_nama') || 'Siswa Tanpa Nama';
         const studentClass = localStorage.getItem('akari_kelas') || 'Kelas Tidak Diketahui';
@@ -797,6 +825,12 @@
             .then(data => {
                 document.getElementById('loadingOverlay').style.display = 'none';
                 if (data.status === 'success') {
+                    
+                    document.getElementById('resSkor').innerText = finalScore;
+                    document.getElementById('resBenar').innerText = totalCorrect;
+                    document.getElementById('resSalah').innerText = totalSalah;
+                    document.getElementById('resKosong').innerText = totalKosong;
+
                     document.getElementById('resultContainer').style.display = 'block';
                     
                     // BERSIHKAN MEMORI UJIAN SETELAH SUKSES SUBMIT
